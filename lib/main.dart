@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'api_service.dart';
 
-void main() async {
-  await dotenv.load(fileName: ".env"); // Cargar variables de entorno
+import 'api_service.dart';
+import 'screens/login_screen.dart'; // Nueva pantalla de inicio de sesión
+
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   runApp(const MyApp());
 }
 
@@ -16,11 +20,14 @@ class MyApp extends StatelessWidget {
       title: 'ToDo List App',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'ToDo List'),
+      debugShowCheckedModeBanner: false,
+      home: const LoginScreen(), // 👈 Empieza en login
     );
   }
 }
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});

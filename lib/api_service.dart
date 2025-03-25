@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ApiService {
   static final String _apiUrl = dotenv.get('API_URL');
+  static final String _baseUrl = dotenv.env['API_URL']!;
+
 
   // Obtener todas las tareas
   static Future<List<Map<String, dynamic>>> getTasks() async {
@@ -74,4 +76,44 @@ class ApiService {
       throw Exception('Error al eliminar la tarea');
     }
   }
+
+
+  // Login: obtiene el token
+  static Future<String> login(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/auth/login'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return data['token'];
+    } else {
+      throw Exception('Error al iniciar sesión');
+    }
+  }
+
+// Registro de usuario
+  static Future<void> register(String username, String password) async {
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/auth/register'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({
+        'username': username,
+        'password': password,
+      }),
+    );
+
+    if (response.statusCode != 201) {
+      throw Exception('Error al registrar usuario');
+    }
+  }
+
+
 }
+
+
